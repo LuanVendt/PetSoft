@@ -24,3 +24,12 @@ export type TPetContext = {
   handleChangeSelectedPetId: (id: string) => void;
   numberOfPets: number;
 };
+
+export type SearchContextProviderProps = {
+  children: React.ReactNode;
+};
+
+export type TSearchtContext = {
+  searchQuery: string;
+  handleChangeSearchQuery: (query: string) => void;
+};
