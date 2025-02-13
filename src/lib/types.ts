@@ -10,3 +10,13 @@ export type Pet = {
 export type PetListProps = {
   pets: Pet[];
 };
+
+export type PetContextProviderProps = {
+  children: React.ReactNode;
+  data: Pet[];
+};
+
+export type TPetContext = {
+  pets: Pet[];
+  selectedPetId: string | null;
+};
