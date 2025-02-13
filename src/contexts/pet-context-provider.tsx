@@ -10,13 +10,19 @@ export default function PetContextProvider({
   data,
 }: PetContextProviderProps) {
   const [pets, setPets] = useState(data);
-  const [selectedPetId, setSelectedPetId] = useState(null);
+  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
+
+  const handleChangeSelectedPetId = (id: string) => {
+    setSelectedPetId(id);
+  };
 
   return (
     <PetContext.Provider
       value={{
         pets,
+        setPets,
         selectedPetId,
+        handleChangeSelectedPetId,
       }}
     >
       {children}
