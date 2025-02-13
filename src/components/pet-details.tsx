@@ -30,7 +30,7 @@ export default function PetDetails() {
 
 function TopBar({ pet }: PetProps) {
   return (
-    <div className="flex items-center bg-white px-8 py-5 border-b border-black/[0.08">
+    <div className="flex items-center bg-white px-8 py-5 border-b border-light">
       <Image
         src={pet ? pet.imageUrl : ""}
         alt="Selected pet image"
@@ -64,7 +64,7 @@ function OtherInfo({ pet }: PetProps) {
 
 function Notes({ pet }: PetProps) {
   return (
-    <section className="flex-1 bg-white px-7 py-5 rounded-md mb-9 mx-8 border border-black/[0.08]">
+    <section className="flex-1 bg-white px-7 py-5 rounded-md mb-9 mx-8 border border-light">
       {pet?.notes}
     </section>
   );
