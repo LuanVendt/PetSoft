@@ -20,5 +20,6 @@ export type TPetContext = {
   pets: Pet[];
   setPets: React.Dispatch<React.SetStateAction<Pet[]>>;
   selectedPetId: string | null;
+  selectedPet: Pet | undefined;
   handleChangeSelectedPetId: (id: string) => void;
 };
