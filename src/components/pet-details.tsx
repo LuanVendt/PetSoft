@@ -46,7 +46,10 @@ function TopBar({ pet }: PetProps) {
 
       <div className="ml-auto space-x-2">
         <PetButton actionType="edit" />
-        <PetButton actionType="checkout" />
+        <PetButton
+          actionType="checkout"
+          onClick={() => handleCheckoutPet(selectedPetId || "")}
+        />
       </div>
     </div>
   );

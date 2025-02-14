@@ -1,6 +1,3 @@
-"use client";
-
-import { usePetContext } from "@/lib/hooks";
 import { PlusIcon } from "@radix-ui/react-icons";
 import React from "react";
 import { Button } from "./ui/button";
@@ -8,11 +5,14 @@ import { Button } from "./ui/button";
 type PetButtonProps = {
   actionType: "add" | "edit" | "checkout";
   children?: React.ReactNode;
+  onClick?: () => void;
 };
 
-export default function PetButton({ actionType, children }: PetButtonProps) {
-  const { handleCheckoutPet, selectedPetId } = usePetContext();
-
+export default function PetButton({
+  actionType,
+  children,
+  onClick,
+}: PetButtonProps) {
   switch (actionType) {
     case "add":
       return (
@@ -28,10 +28,7 @@ export default function PetButton({ actionType, children }: PetButtonProps) {
 
     case "checkout":
       return (
-        <Button
-          variant="secondary"
-          onClick={() => handleCheckoutPet(selectedPetId || "")}
-        >
+        <Button variant="secondary" onClick={onClick}>
           {children ? children : "Checkout"}
         </Button>
       );
