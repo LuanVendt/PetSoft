@@ -30,6 +30,8 @@ export default function PetDetails() {
 }
 
 function TopBar({ pet }: PetProps) {
+  const { handleCheckoutPet, selectedPetId } = usePetContext();
+
   return (
     <div className="flex items-center bg-white px-8 py-5 border-b border-light">
       <Image
