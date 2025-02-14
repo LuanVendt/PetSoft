@@ -3,6 +3,7 @@
 import { usePetContext } from "@/lib/hooks";
 import { Pet } from "@/lib/types";
 import Image from "next/image";
+import PetButton from "./pet-button";
 
 type PetProps = {
   pet: Pet;
@@ -40,6 +41,11 @@ function TopBar({ pet }: PetProps) {
       />
 
       <h2 className="text-3xl font-semibold leading-7 ml-5">{pet?.name}</h2>
+
+      <div className="ml-auto space-x-2">
+        <PetButton actionType="edit" />
+        <PetButton actionType="checkout" />
+      </div>
     </div>
   );
 }
