@@ -24,6 +24,7 @@ export type TPetContext = {
   handleChangeSelectedPetId: (id: string) => void;
   handleCheckoutPet: (id: string) => void;
   handleAddPet: (newPet: Omit<Pet, "id">) => void;
+  handleEditPet: (id: string, updatedPet: Omit<Pet, "id">) => void;
   numberOfPets: number;
 };
 

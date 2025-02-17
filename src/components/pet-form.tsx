@@ -12,15 +12,19 @@ type PetFormProps = {
   onFormSubmission: () => void;
 };
 
-export default function PetForm({ actionType, onFormSubmission }: PetFormProps) {
-  const { handleAddPet } = usePetContext();
+export default function PetForm({
+  actionType,
+  onFormSubmission,
+}: PetFormProps) {
+  const { handleAddPet, handleEditPet, selectedPet, selectedPetId } =
+    usePetContext();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
 
-    const newPet: Omit<Pet, "id"> = {
+    const pet: Omit<Pet, "id"> = {
       name: String(formData.get("name")),
       ownerName: String(formData.get("ownerName")),
       imageUrl:
@@ -30,8 +34,10 @@ export default function PetForm({ actionType, onFormSubmission }: PetFormProps) 
       notes: String(formData.get("notes")),
     };
 
-    handleAddPet(newPet);
-    
+    actionType === "add"
+      ? handleAddPet(pet)
+      : handleEditPet(selectedPetId!, pet);
+
     onFormSubmission();
   };
 
@@ -40,27 +46,55 @@ export default function PetForm({ actionType, onFormSubmission }: PetFormProps) 
       <div className="space-y-3">
         <div className="space-y-1">
           <Label htmlFor="name">Name</Label>
-          <Input id="name" type="text" name="name" required />
+          <Input
+            id="name"
+            type="text"
+            name="name"
+            required
+            defaultValue={actionType === "edit" ? selectedPet?.name : ""}
+          />
         </div>
 
         <div>
           <Label htmlFor="ownerName">Owner Name</Label>
-          <Input id="ownerName" type="text" name="ownerName" required />
+          <Input
+            id="ownerName"
+            type="text"
+            name="ownerName"
+            required
+            defaultValue={actionType === "edit" ? selectedPet?.ownerName : ""}
+          />
         </div>
 
         <div>
           <Label htmlFor="imageUrl">Image Url</Label>
-          <Input id="imageUrl" type="text" name="imageUrl" />
+          <Input
+            id="imageUrl"
+            type="text"
+            name="imageUrl"
+            defaultValue={actionType === "edit" ? selectedPet?.imageUrl : ""}
+          />
         </div>
 
         <div>
           <Label htmlFor="age">Age</Label>
-          <Input id="age" type="number" name="age" required />
+          <Input
+            id="age"
+            type="number"
+            name="age"
+            required
+            defaultValue={actionType === "edit" ? selectedPet?.age : ""}
+          />
         </div>
 
         <div>
           <Label htmlFor="notes">Notes</Label>
-          <Textarea id="notes" rows={3} name="notes" />
+          <Textarea
+            id="notes"
+            rows={3}
+            name="notes"
+            defaultValue={actionType === "edit" ? selectedPet?.notes : ""}
+          />
         </div>
       </div>
 
