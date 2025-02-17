@@ -1,3 +1,5 @@
+"use client";
+
 import { PlusIcon } from "@radix-ui/react-icons";
 import React from "react";
 import PetForm from "./pet-form";
@@ -21,6 +23,8 @@ export default function PetButton({
   children,
   onClick,
 }: PetButtonProps) {
+  const [open, setOpen] = React.useState(false);
+
   if (actionType === "checkout") {
     return (
       <Button variant="secondary" onClick={onClick}>
@@ -30,7 +34,7 @@ export default function PetButton({
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {actionType === "add" ? (
           <Button size={children ? "default" : "icon"}>
@@ -48,7 +52,10 @@ export default function PetButton({
           </DialogTitle>
         </DialogHeader>
 
-        <PetForm actionType={actionType} />
+        <PetForm
+          actionType={actionType}
+          onFormSubmission={() => setOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   );
