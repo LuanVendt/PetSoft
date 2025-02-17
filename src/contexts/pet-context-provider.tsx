@@ -1,5 +1,6 @@
 "use client";
 
+import { addPet, checkoutPet, editPet } from "@/actions/actions";
 import { Pet, PetContextProviderProps, TPetContext } from "@/lib/types";
 import { createContext, useState } from "react";
 
@@ -18,18 +19,19 @@ export default function PetContextProvider({
   const numberOfPets = pets.length;
 
   // event handlers / actions
-  const handleAddPet = (newPet: Omit<Pet, "id">) => {
-    setPets((prev) => [...prev, { id: String(Date.now()), ...newPet }]);
+  const handleAddPet = async (data: Omit<Pet, "id">) => {
+    const createdPet = await addPet(data);
+    setPets((prev) => [...prev, createdPet]);
   };
 
-  const handleEditPet = (id: string, updatedPet: Omit<Pet, "id">) => {
-    setPets((prev) =>
-      prev.map((pet) => (pet.id === id ? { id, ...updatedPet } : pet))
-    );
+  const handleEditPet = async (id: string, data: Omit<Pet, "id">) => {
+    const updatedPet = await editPet(id, data);
+    setPets((prev) => prev.map((pet) => (pet.id === id ? updatedPet : pet)));
   };
 
-  const handleCheckoutPet = (id: string) => {
-    setPets((prev) => prev.filter((pet) => pet.id !== id));
+  const handleCheckoutPet = async (id: string) => {
+    const deletedPet = await checkoutPet(id);
+    setPets((prev) => prev.filter((pet) => pet.id !== deletedPet.id));
     setSelectedPetId(null);
   };
 
