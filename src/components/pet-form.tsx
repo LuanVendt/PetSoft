@@ -1,8 +1,6 @@
 "use client";
 
-import { addPet, editPet } from "@/actions/actions";
 import { usePetContext } from "@/lib/hooks";
-import { toast } from "sonner";
 import PetFormBtn from "./pet-form-btn";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -17,22 +15,24 @@ export default function PetForm({
   actionType,
   onFormSubmission,
 }: PetFormProps) {
-  const { selectedPet } = usePetContext();
+  const { selectedPet, handleAddPet, handleEditPet } = usePetContext();
 
   return (
     <form
       action={async (formData) => {
-        let error: { message: string } | undefined = undefined;
+        onFormSubmission();
+
+        const petData = {
+          name: formData.get("name") as string,
+          ownerName: formData.get("ownerName") as string,
+          imageUrl: formData.get("imageUrl") as string,
+          age: Number(formData.get("age")),
+          notes: formData.get("notes") as string,
+        };
 
         actionType === "add"
-          ? (error = await addPet(formData))
-          : (error = await editPet(selectedPet!.id, formData));
-
-        if (error) {
-          toast.warning(error.message);
-          return;
-        }
-        onFormSubmission();
+          ? await handleAddPet(petData)
+          : await handleEditPet(selectedPet!.id, petData);
       }}
       className="flex flex-col"
     >

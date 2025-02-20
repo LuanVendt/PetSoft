@@ -2,23 +2,20 @@
 
 import { DEFAULT_PET_IMAGE } from "@/lib/constants";
 import prisma from "@/lib/db";
+import { Pet } from "@/lib/types";
 import { isValidImageUrl, sleep } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
-export async function addPet(formData: FormData) {
-  let imageUrl = String(formData.get("imageUrl"));
-
-  if (!isValidImageUrl(imageUrl)) imageUrl = DEFAULT_PET_IMAGE;
+export async function addPet(data: Omit<Pet, "id">) {
   await sleep();
-
   try {
     await prisma.pets.create({
       data: {
-        name: String(formData.get("name")),
-        ownerName: String(formData.get("ownerName")),
-        imageUrl,
-        age: Number(formData.get("age")),
-        notes: String(formData.get("notes")),
+        name: data.name,
+        ownerName: data.ownerName,
+        imageUrl: data.imageUrl,
+        age: data.age,
+        notes: data.notes,
       },
     });
   } catch (error) {
@@ -30,8 +27,8 @@ export async function addPet(formData: FormData) {
   revalidatePath("/app", "layout");
 }
 
-export async function editPet(id: string, formData: FormData) {
-  let imageUrl = String(formData.get("imageUrl"));
+export async function editPet(id: string, data: Omit<Pet, "id">) {
+  let imageUrl = data.imageUrl;
 
   if (!isValidImageUrl(imageUrl)) imageUrl = DEFAULT_PET_IMAGE;
   await sleep();
@@ -40,11 +37,11 @@ export async function editPet(id: string, formData: FormData) {
     await prisma.pets.update({
       where: { id },
       data: {
-        name: String(formData.get("name")),
-        ownerName: String(formData.get("ownerName")),
+        name: data.name,
+        ownerName: data.ownerName,
         imageUrl,
-        age: Number(formData.get("age")),
-        notes: String(formData.get("notes")),
+        age: data.age,
+        notes: data.notes,
       },
     });
   } catch (error) {

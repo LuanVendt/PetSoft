@@ -12,6 +12,8 @@ export default function PetList() {
     pet.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  if (filteredPets.length === 0) return <EmptyView />;
+
   return (
     <ul className="bg-white border-b border-light">
       {filteredPets.map((pet) => (
@@ -37,5 +39,13 @@ export default function PetList() {
         </li>
       ))}
     </ul>
+  );
+}
+
+function EmptyView() {
+  return (
+    <div className="flex items-center justify-center h-full w-full">
+      <p className="text-lg">No pets found</p>
+    </div>
   );
 }

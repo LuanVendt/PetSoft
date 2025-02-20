@@ -1,11 +1,8 @@
 "use client";
 
-import { checkoutPet } from "@/actions/actions";
 import { usePetContext } from "@/lib/hooks";
 import { Pet } from "@/lib/types";
 import Image from "next/image";
-import { useTransition } from "react";
-import { toast } from "sonner";
 import PetButton from "./pet-button";
 
 type PetProps = {
@@ -33,20 +30,12 @@ export default function PetDetails() {
 }
 
 function TopBar({ pet }: PetProps) {
-  const [isPending, startTransition] = useTransition();
-
-  const handleCheckout = async () => {
-    startTransition(async () => {
-      const error = await checkoutPet(pet.id!);
-
-      if (error) toast.warning(error.message);
-    });
-  };
+  const { handleCheckoutPet } = usePetContext();
 
   return (
     <div className="flex items-center bg-white px-8 py-5 border-b border-light">
       <Image
-        src={pet ? pet.imageUrl : ""}
+        src={pet.imageUrl}
         alt="Selected pet image"
         height={75}
         width={75}
@@ -58,15 +47,15 @@ function TopBar({ pet }: PetProps) {
           pet.name.length > 6 ? "text-xl sm:text-3xl" : "text-3xl"
         }`}
       >
-        {pet?.name}
+        {pet.name}
       </h2>
 
       <div className="ml-auto space-x-2">
         <PetButton actionType="edit" />
         <PetButton
           actionType="checkout"
-          onClick={handleCheckout}
-          disabled={isPending}
+          onClick={async () => await handleCheckoutPet(pet.id)}
+          // disabled={isPending}
         />
       </div>
     </div>
@@ -80,12 +69,12 @@ function OtherInfo({ pet }: PetProps) {
         <h3 className="text-[13px] font-medium uppercase text-zinc-700">
           Owner name
         </h3>
-        <p className="mt-1 text-lg text-zinc-800">{pet?.ownerName}</p>
+        <p className="mt-1 text-lg text-zinc-800">{pet.ownerName}</p>
       </div>
 
       <div>
         <h3 className="text-[13px] font-medium uppercase text-zinc-700">Age</h3>
-        <p className="mt-1 text-lg text-zinc-800">{pet?.age}</p>
+        <p className="mt-1 text-lg text-zinc-800">{pet.age}</p>
       </div>
     </div>
   );
@@ -94,7 +83,7 @@ function OtherInfo({ pet }: PetProps) {
 function Notes({ pet }: PetProps) {
   return (
     <section className="flex-1 bg-white px-7 py-5 rounded-md mb-9 mx-8 border border-light">
-      {pet?.notes}
+      {pet.notes}
     </section>
   );
 }

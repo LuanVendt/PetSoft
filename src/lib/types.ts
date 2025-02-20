@@ -20,6 +20,9 @@ export type TPetContext = {
   pets: Pet[];
   selectedPetId: string | null;
   selectedPet: Pet | undefined;
+  handleAddPet: (newPet: Omit<Pet, "id">) => Promise<void>;
+  handleEditPet: (id: string, updatedPet: Omit<Pet, "id">) => Promise<void>;
+  handleCheckoutPet: (id: string) => Promise<void>;
   handleChangeSelectedPetId: (id: string) => void;
   numberOfPets: number;
 };
