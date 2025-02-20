@@ -2,16 +2,17 @@
 
 import { addPet, checkoutPet, editPet } from "@/actions/actions";
 import { DEFAULT_PET_IMAGE } from "@/lib/constants";
-import { Pet, PetContextProviderProps, TPetContext } from "@/lib/types";
+import { PetContextProviderProps, PetPayload, TPetContext } from "@/lib/types";
 import { isValidImageUrl } from "@/lib/utils";
+import { Pet } from "@prisma/client";
 import { createContext, useOptimistic, useState } from "react";
 import { toast } from "sonner";
 
 export const PetContext = createContext<TPetContext | null>(null);
 
 type ActionPayload =
-  | { action: "add"; payload: Omit<Pet, "id"> }
-  | { action: "edit"; payload: { id: string; updatedPet: Omit<Pet, "id"> } }
+  | { action: "add"; payload: PetPayload }
+  | { action: "edit"; payload: { id: string; updatedPet: PetPayload } }
   | { action: "delete"; payload: string };
 
 export default function PetContextProvider({
@@ -23,11 +24,21 @@ export default function PetContextProvider({
     (state: Pet[], { action, payload }: ActionPayload) => {
       switch (action) {
         case "add":
-          return [...state, { ...payload, id: Math.random().toString() }];
+          return [
+            ...state,
+            {
+              ...payload,
+              id: Math.random().toString(),
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
+          ];
 
         case "edit":
           return state.map((pet) =>
-            pet.id === payload.id ? { ...pet, ...payload.updatedPet } : pet
+            pet.id === payload.id
+              ? { ...pet, ...payload.updatedPet, ...payload.updatedPet }
+              : pet
           );
 
         case "delete":
@@ -44,7 +55,7 @@ export default function PetContextProvider({
   const selectedPet = optimisticPets.find((pet) => pet.id === selectedPetId);
   const numberOfPets = optimisticPets.length;
 
-  const handleAddPet = async (newPet: Omit<Pet, "id">) => {
+  const handleAddPet = async (newPet: PetPayload) => {
     if (!isValidImageUrl(newPet.imageUrl)) newPet.imageUrl = DEFAULT_PET_IMAGE;
 
     setOptimisticPets({ action: "add", payload: newPet });
@@ -57,7 +68,7 @@ export default function PetContextProvider({
     }
   };
 
-  const handleEditPet = async (id: string, updatedPet: Omit<Pet, "id">) => {
+  const handleEditPet = async (id: string, updatedPet: PetPayload) => {
     if (!isValidImageUrl(updatedPet.imageUrl))
       updatedPet.imageUrl = DEFAULT_PET_IMAGE;
 

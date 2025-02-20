@@ -1,7 +1,7 @@
 "use client";
 
 import { usePetContext } from "@/lib/hooks";
-import { Pet } from "@/lib/types";
+import { Pet } from "@prisma/client";
 import Image from "next/image";
 import PetButton from "./pet-button";
 
@@ -55,7 +55,6 @@ function TopBar({ pet }: PetProps) {
         <PetButton
           actionType="checkout"
           onClick={async () => await handleCheckoutPet(pet.id)}
-          // disabled={isPending}
         />
       </div>
     </div>

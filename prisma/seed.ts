@@ -34,7 +34,7 @@ async function main() {
   console.log(`Start seeding ...`);
 
   for (const pet of pets) {
-    const result = await prisma.pets.create({
+    const result = await prisma.pet.create({
       data: pet,
     });
     console.log(`Created pet with id: ${result.id}`);

@@ -1,14 +1,9 @@
-export type Pet = {
-  id: string;
-  name: string;
-  ownerName: string;
-  imageUrl: string;
-  age: number;
-  notes: string;
-};
+import { Pet } from "@prisma/client";
+
+export type PetPayload = Omit<Pet, "id" | "createdAt" | "updatedAt">;
 
 export type PetListProps = {
-  pets: Pet[];
+  Pet: Pet[];
 };
 
 export type PetContextProviderProps = {
@@ -20,8 +15,8 @@ export type TPetContext = {
   pets: Pet[];
   selectedPetId: string | null;
   selectedPet: Pet | undefined;
-  handleAddPet: (newPet: Omit<Pet, "id">) => Promise<void>;
-  handleEditPet: (id: string, updatedPet: Omit<Pet, "id">) => Promise<void>;
+  handleAddPet: (newPet: PetPayload) => Promise<void>;
+  handleEditPet: (id: string, updatedPet: PetPayload) => Promise<void>;
   handleCheckoutPet: (id: string) => Promise<void>;
   handleChangeSelectedPetId: (id: string) => void;
   numberOfPets: number;

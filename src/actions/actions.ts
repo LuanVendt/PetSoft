@@ -1,14 +1,16 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { Pet } from "@/lib/types";
 import { sleep } from "@/lib/utils";
+import { Pet } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-export async function addPet(data: Omit<Pet, "id">) {
+type PetData = Omit<Pet, "id" | "createdAt" | "updatedAt">;
+
+export async function addPet(data: PetData) {
   await sleep();
   try {
-    await prisma.pets.create({ data });
+    await prisma.pet.create({ data });
   } catch (error) {
     return {
       message: "Could not add pet.",
@@ -18,11 +20,11 @@ export async function addPet(data: Omit<Pet, "id">) {
   revalidatePath("/app", "layout");
 }
 
-export async function editPet(id: string, data: Omit<Pet, "id">) {
+export async function editPet(id: string, data: PetData) {
   await sleep();
 
   try {
-    await prisma.pets.update({
+    await prisma.pet.update({
       where: { id },
       data,
     });
@@ -39,7 +41,7 @@ export async function checkoutPet(id: string) {
   await sleep();
 
   try {
-    await prisma.pets.delete({ where: { id } });
+    await prisma.pet.delete({ where: { id } });
   } catch (error) {
     return {
       message: "Could not checkout pet.",
