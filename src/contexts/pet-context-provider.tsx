@@ -56,7 +56,8 @@ export default function PetContextProvider({
   const numberOfPets = optimisticPets.length;
 
   const handleAddPet = async (newPet: PetPayload) => {
-    if (!isValidImageUrl(newPet.imageUrl)) newPet.imageUrl = DEFAULT_PET_IMAGE;
+    if (!(await isValidImageUrl(newPet.imageUrl)))
+      newPet.imageUrl = DEFAULT_PET_IMAGE;
 
     setOptimisticPets({ action: "add", payload: newPet });
 
@@ -69,7 +70,7 @@ export default function PetContextProvider({
   };
 
   const handleEditPet = async (id: string, updatedPet: PetPayload) => {
-    if (!isValidImageUrl(updatedPet.imageUrl))
+    if (!(await isValidImageUrl(updatedPet.imageUrl)))
       updatedPet.imageUrl = DEFAULT_PET_IMAGE;
 
     setOptimisticPets({ action: "edit", payload: { id, updatedPet } });

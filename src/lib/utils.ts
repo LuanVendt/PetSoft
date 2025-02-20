@@ -9,7 +9,28 @@ export async function sleep(ms: number = 1000) {
   await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function isValidImageUrl(url?: string) {
+export async function isValidImageUrl(url?: string) {
   if (!url) return false;
-  return url.match(/\.(jpeg|jpg|gif|png|webp)$/) !== null;
+
+  try {
+    const parsedUrl = new URL(url);
+
+    if (!parsedUrl.hostname.includes("unsplash.com")) {
+      return false;
+    }
+
+    const response = await fetch(url, { method: "HEAD" });
+    if (!response.ok) {
+      return false;
+    }
+
+    const contentType = response.headers.get("Content-Type") || "";
+    if (!contentType.startsWith("image/")) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
