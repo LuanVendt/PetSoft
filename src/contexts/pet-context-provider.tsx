@@ -9,20 +9,33 @@ import { toast } from "sonner";
 
 export const PetContext = createContext<TPetContext | null>(null);
 
+type ActionPayload =
+  | { action: "add"; payload: Omit<Pet, "id"> }
+  | { action: "edit"; payload: { id: string; updatedPet: Omit<Pet, "id"> } }
+  | { action: "delete"; payload: string };
+
 export default function PetContextProvider({
   children,
   data: pets,
 }: PetContextProviderProps) {
   const [optimisticPets, setOptimisticPets] = useOptimistic(
     pets,
-    (state, newPet) => {
-      return [
-        ...state,
-        {
-          ...newPet,
-          id: Math.random().toString(36).substr(2, 9),
-        },
-      ];
+    (state: Pet[], { action, payload }: ActionPayload) => {
+      switch (action) {
+        case "add":
+          return [...state, { ...payload, id: Math.random().toString() }];
+
+        case "edit":
+          return state.map((pet) =>
+            pet.id === payload.id ? { ...pet, ...payload.updatedPet } : pet
+          );
+
+        case "delete":
+          return state.filter((pet) => pet.id !== payload);
+
+        default:
+          return state;
+      }
     }
   );
 
@@ -34,7 +47,8 @@ export default function PetContextProvider({
   const handleAddPet = async (newPet: Omit<Pet, "id">) => {
     if (!isValidImageUrl(newPet.imageUrl)) newPet.imageUrl = DEFAULT_PET_IMAGE;
 
-    setOptimisticPets(newPet);
+    setOptimisticPets({ action: "add", payload: newPet });
+
     const error = await addPet(newPet);
 
     if (error) {
@@ -47,6 +61,8 @@ export default function PetContextProvider({
     if (!isValidImageUrl(updatedPet.imageUrl))
       updatedPet.imageUrl = DEFAULT_PET_IMAGE;
 
+    setOptimisticPets({ action: "edit", payload: { id, updatedPet } });
+
     const error = await editPet(id, updatedPet);
 
     if (error) {
@@ -56,9 +72,14 @@ export default function PetContextProvider({
   };
 
   const handleCheckoutPet = async (id: string) => {
+    setOptimisticPets({ action: "delete", payload: id });
+
     const error = await checkoutPet(id);
 
-    if (error) toast.warning(error.message);
+    if (error) {
+      toast.warning(error.message);
+      return;
+    }
   };
 
   const handleChangeSelectedPetId = (id: string) => setSelectedPetId(id);
