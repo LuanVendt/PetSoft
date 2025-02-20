@@ -32,10 +32,8 @@ export default function PetDetails() {
 }
 
 function TopBar({ pet }: PetProps) {
-  const { selectedPetId } = usePetContext();
-
   const handleCheckout = async () => {
-    const error = await checkoutPet(selectedPetId!);
+    const error = await checkoutPet(pet.id!);
 
     if (error) toast.warning(error.message);
   };
