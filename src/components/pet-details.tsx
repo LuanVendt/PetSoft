@@ -4,6 +4,7 @@ import { checkoutPet } from "@/actions/actions";
 import { usePetContext } from "@/lib/hooks";
 import { Pet } from "@/lib/types";
 import Image from "next/image";
+import { useTransition } from "react";
 import { toast } from "sonner";
 import PetButton from "./pet-button";
 
@@ -32,10 +33,14 @@ export default function PetDetails() {
 }
 
 function TopBar({ pet }: PetProps) {
-  const handleCheckout = async () => {
-    const error = await checkoutPet(pet.id!);
+  const [isPending, startTransition] = useTransition();
 
-    if (error) toast.warning(error.message);
+  const handleCheckout = async () => {
+    startTransition(async () => {
+      const error = await checkoutPet(pet.id!);
+
+      if (error) toast.warning(error.message);
+    });
   };
 
   return (
@@ -58,7 +63,11 @@ function TopBar({ pet }: PetProps) {
 
       <div className="ml-auto space-x-2">
         <PetButton actionType="edit" />
-        <PetButton actionType="checkout" onClick={handleCheckout} />
+        <PetButton
+          actionType="checkout"
+          onClick={handleCheckout}
+          disabled={isPending}
+        />
       </div>
     </div>
   );

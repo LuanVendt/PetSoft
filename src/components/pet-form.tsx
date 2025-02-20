@@ -77,6 +77,7 @@ export default function PetForm({
             id="age"
             type="number"
             name="age"
+            min={0}
             required
             defaultValue={actionType === "edit" ? selectedPet?.age : ""}
           />

@@ -1,6 +1,5 @@
 "use client";
 
-import { sleep } from "@/lib/utils";
 import { PlusIcon } from "@radix-ui/react-icons";
 import React, { useRef, useState } from "react";
 import PetForm from "./pet-form";
@@ -17,12 +16,14 @@ type PetButtonProps = {
   actionType: "add" | "edit" | "checkout";
   children?: React.ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
 export default function PetButton({
   actionType,
   children,
   onClick,
+  disabled = false,
 }: PetButtonProps) {
   const [open, setOpen] = useState(false);
 
@@ -31,13 +32,16 @@ export default function PetButton({
   const handleClick = async () => {
     if (buttonRef.current) buttonRef.current.disabled = true;
     if (onClick) onClick();
-    await sleep(2000);
-    if (buttonRef.current) buttonRef.current.disabled = false;
   };
 
   if (actionType === "checkout") {
     return (
-      <Button variant="secondary" onClick={handleClick} ref={buttonRef}>
+      <Button
+        variant="secondary"
+        onClick={handleClick}
+        ref={buttonRef}
+        disabled={disabled}
+      >
         {children ? children : "Checkout"}
       </Button>
     );
