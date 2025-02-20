@@ -59,7 +59,13 @@ export async function editPet(id: string, formData: FormData) {
 export async function checkoutPet(id: string) {
   await sleep();
 
-  await prisma.pets.delete({ where: { id } });
+  try {
+    await prisma.pets.delete({ where: { id } });
+  } catch (error) {
+    return {
+      message: "Could not checkout pet.",
+    };
+  }
 
   revalidatePath("/app", "layout");
 }

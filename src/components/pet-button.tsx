@@ -1,5 +1,6 @@
 "use client";
 
+import { sleep } from "@/lib/utils";
 import { PlusIcon } from "@radix-ui/react-icons";
 import React, { useRef, useState } from "react";
 import PetForm from "./pet-form";
@@ -27,9 +28,11 @@ export default function PetButton({
 
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (buttonRef.current) buttonRef.current.disabled = true;
     if (onClick) onClick();
+    await sleep(2000);
+    if (buttonRef.current) buttonRef.current.disabled = false;
   };
 
   if (actionType === "checkout") {

@@ -4,6 +4,7 @@ import { checkoutPet } from "@/actions/actions";
 import { usePetContext } from "@/lib/hooks";
 import { Pet } from "@/lib/types";
 import Image from "next/image";
+import { toast } from "sonner";
 import PetButton from "./pet-button";
 
 type PetProps = {
@@ -33,6 +34,12 @@ export default function PetDetails() {
 function TopBar({ pet }: PetProps) {
   const { selectedPetId } = usePetContext();
 
+  const handleCheckout = async () => {
+    const error = await checkoutPet(selectedPetId!);
+
+    if (error) toast.warning(error.message);
+  };
+
   return (
     <div className="flex items-center bg-white px-8 py-5 border-b border-light">
       <Image
@@ -53,10 +60,7 @@ function TopBar({ pet }: PetProps) {
 
       <div className="ml-auto space-x-2">
         <PetButton actionType="edit" />
-        <PetButton
-          actionType="checkout"
-          onClick={async () => checkoutPet(selectedPetId!)}
-        />
+        <PetButton actionType="checkout" onClick={handleCheckout} />
       </div>
     </div>
   );
