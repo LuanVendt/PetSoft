@@ -1,8 +1,9 @@
 "use client";
 
+import { addPet, editPet } from "@/actions/actions";
 import { usePetContext } from "@/lib/hooks";
-import { Pet } from "@/lib/types";
-import { Button } from "./ui/button";
+import { toast } from "sonner";
+import PetFormBtn from "./pet-form-btn";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
@@ -16,33 +17,25 @@ export default function PetForm({
   actionType,
   onFormSubmission,
 }: PetFormProps) {
-  const { handleAddPet, handleEditPet, selectedPet, selectedPetId } =
-    usePetContext();
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-
-    const pet: Omit<Pet, "id"> = {
-      name: String(formData.get("name")),
-      ownerName: String(formData.get("ownerName")),
-      imageUrl:
-        String(formData.get("imageUrl")) ||
-        "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
-      age: Number(formData.get("age")),
-      notes: String(formData.get("notes")),
-    };
-
-    actionType === "add"
-      ? handleAddPet(pet)
-      : handleEditPet(selectedPetId!, pet);
-
-    onFormSubmission();
-  };
+  const { selectedPet } = usePetContext();
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col">
+    <form
+      action={async (formData) => {
+        let error: { message: string } | undefined = undefined;
+
+        actionType === "add"
+          ? (error = await addPet(formData))
+          : (error = await editPet(selectedPet!.id, formData));
+
+        if (error) {
+          toast.warning(error.message);
+          return;
+        }
+        onFormSubmission();
+      }}
+      className="flex flex-col"
+    >
       <div className="space-y-3">
         <div className="space-y-1">
           <Label htmlFor="name">Name</Label>
@@ -50,6 +43,7 @@ export default function PetForm({
             id="name"
             type="text"
             name="name"
+            maxLength={10}
             required
             defaultValue={actionType === "edit" ? selectedPet?.name : ""}
           />
@@ -61,6 +55,7 @@ export default function PetForm({
             id="ownerName"
             type="text"
             name="ownerName"
+            maxLength={20}
             required
             defaultValue={actionType === "edit" ? selectedPet?.ownerName : ""}
           />
@@ -98,9 +93,7 @@ export default function PetForm({
         </div>
       </div>
 
-      <Button type="submit" className="mt-5 self-end">
-        {actionType === "add" ? "Add a new pet" : "Edit Pet"}
-      </Button>
+      <PetFormBtn actionType={actionType} />
     </form>
   );
 }

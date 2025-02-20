@@ -18,13 +18,9 @@ export type PetContextProviderProps = {
 
 export type TPetContext = {
   pets: Pet[];
-  setPets: React.Dispatch<React.SetStateAction<Pet[]>>;
   selectedPetId: string | null;
   selectedPet: Pet | undefined;
   handleChangeSelectedPetId: (id: string) => void;
-  handleCheckoutPet: (id: string) => void;
-  handleAddPet: (newPet: Omit<Pet, "id">) => void;
-  handleEditPet: (id: string, updatedPet: Omit<Pet, "id">) => void;
   numberOfPets: number;
 };
 

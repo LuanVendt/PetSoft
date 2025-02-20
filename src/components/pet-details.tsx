@@ -1,5 +1,6 @@
 "use client";
 
+import { checkoutPet } from "@/actions/actions";
 import { usePetContext } from "@/lib/hooks";
 import { Pet } from "@/lib/types";
 import Image from "next/image";
@@ -30,7 +31,7 @@ export default function PetDetails() {
 }
 
 function TopBar({ pet }: PetProps) {
-  const { handleCheckoutPet, selectedPetId } = usePetContext();
+  const { selectedPetId } = usePetContext();
 
   return (
     <div className="flex items-center bg-white px-8 py-5 border-b border-light">
@@ -42,13 +43,19 @@ function TopBar({ pet }: PetProps) {
         className="h-[75px] w-[75px] rounded-full object-cover"
       />
 
-      <h2 className="text-3xl font-semibold leading-7 ml-5">{pet?.name}</h2>
+      <h2
+        className={`font-semibold leading-7 ml-5 ${
+          pet.name.length > 6 ? "text-xl sm:text-3xl" : "text-3xl"
+        }`}
+      >
+        {pet?.name}
+      </h2>
 
       <div className="ml-auto space-x-2">
         <PetButton actionType="edit" />
         <PetButton
           actionType="checkout"
-          onClick={() => handleCheckoutPet(selectedPetId || "")}
+          onClick={async () => checkoutPet(selectedPetId!)}
         />
       </div>
     </div>
