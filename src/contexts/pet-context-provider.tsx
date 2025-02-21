@@ -2,7 +2,11 @@
 
 import { addPet, checkoutPet, editPet } from "@/actions/actions";
 import { DEFAULT_PET_IMAGE } from "@/lib/constants";
-import { PetContextProviderProps, PetPayload, TPetContext } from "@/lib/types";
+import {
+  PetContextProviderProps,
+  PetEssentials,
+  TPetContext,
+} from "@/lib/types";
 import { isValidImageUrl } from "@/lib/utils";
 import { Pet } from "@prisma/client";
 import { createContext, useOptimistic, useState } from "react";
@@ -11,8 +15,8 @@ import { toast } from "sonner";
 export const PetContext = createContext<TPetContext | null>(null);
 
 type ActionPayload =
-  | { action: "add"; payload: PetPayload }
-  | { action: "edit"; payload: { id: string; updatedPet: PetPayload } }
+  | { action: "add"; payload: PetEssentials }
+  | { action: "edit"; payload: { id: string; updatedPet: PetEssentials } }
   | { action: "delete"; payload: string };
 
 export default function PetContextProvider({
@@ -55,7 +59,7 @@ export default function PetContextProvider({
   const selectedPet = optimisticPets.find((pet) => pet.id === selectedPetId);
   const numberOfPets = optimisticPets.length;
 
-  const handleAddPet = async (newPet: PetPayload) => {
+  const handleAddPet = async (newPet: PetEssentials) => {
     if (!(await isValidImageUrl(newPet.imageUrl)))
       newPet.imageUrl = DEFAULT_PET_IMAGE;
 
@@ -69,7 +73,7 @@ export default function PetContextProvider({
     }
   };
 
-  const handleEditPet = async (id: string, updatedPet: PetPayload) => {
+  const handleEditPet = async (id: string, updatedPet: PetEssentials) => {
     if (!(await isValidImageUrl(updatedPet.imageUrl)))
       updatedPet.imageUrl = DEFAULT_PET_IMAGE;
 
