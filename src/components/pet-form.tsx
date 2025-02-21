@@ -46,6 +46,7 @@ export default function PetForm({
             maxLength={10}
             required
             defaultValue={actionType === "edit" ? selectedPet?.name : ""}
+            placeholder="Name"
           />
         </div>
 
@@ -58,6 +59,7 @@ export default function PetForm({
             maxLength={20}
             required
             defaultValue={actionType === "edit" ? selectedPet?.ownerName : ""}
+            placeholder="Owner Name"
           />
         </div>
 
@@ -68,6 +70,7 @@ export default function PetForm({
             type="text"
             name="imageUrl"
             defaultValue={actionType === "edit" ? selectedPet?.imageUrl : ""}
+            placeholder="Unsplash image URL"
           />
         </div>
 
@@ -80,6 +83,7 @@ export default function PetForm({
             min={0}
             required
             defaultValue={actionType === "edit" ? selectedPet?.age : ""}
+            placeholder="Age"
           />
         </div>
 
@@ -90,6 +94,7 @@ export default function PetForm({
             rows={3}
             name="notes"
             defaultValue={actionType === "edit" ? selectedPet?.notes : ""}
+            placeholder="Notes"
           />
         </div>
       </div>

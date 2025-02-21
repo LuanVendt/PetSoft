@@ -15,7 +15,7 @@ export default function PetList() {
   if (filteredPets.length === 0) return <EmptyView />;
 
   return (
-    <ul className="bg-white border-b border-light">
+    <ul className="bg-white border-b border-light h-full overflow-y-auto">
       {filteredPets.map((pet) => (
         <li key={pet.id}>
           <button
