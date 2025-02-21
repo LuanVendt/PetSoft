@@ -13,7 +13,7 @@ export type PetContextProviderProps = {
 
 export type TPetContext = {
   pets: Pet[];
-  selectedPetId: string | null;
+  selectedPetId: Pet["id"] | null;
   selectedPet: Pet | undefined;
   handleAddPet: (newPet: PetEssentials) => Promise<void>;
   handleEditPet: (id: Pet["id"], updatedPet: PetEssentials) => Promise<void>;
