@@ -73,7 +73,7 @@ export default function PetContextProvider({
     }
   };
 
-  const handleEditPet = async (id: string, updatedPet: PetEssentials) => {
+  const handleEditPet = async (id: Pet["id"], updatedPet: PetEssentials) => {
     if (!(await isValidImageUrl(updatedPet.imageUrl)))
       updatedPet.imageUrl = DEFAULT_PET_IMAGE;
 
@@ -87,7 +87,7 @@ export default function PetContextProvider({
     }
   };
 
-  const handleCheckoutPet = async (id: string) => {
+  const handleCheckoutPet = async (id: Pet["id"]) => {
     setOptimisticPets({ action: "delete", payload: id });
 
     const error = await checkoutPet(id);
@@ -98,7 +98,7 @@ export default function PetContextProvider({
     }
   };
 
-  const handleChangeSelectedPetId = (id: string) => setSelectedPetId(id);
+  const handleChangeSelectedPetId = (id: Pet["id"]) => setSelectedPetId(id);
 
   return (
     <PetContext.Provider

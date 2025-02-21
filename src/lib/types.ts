@@ -16,9 +16,9 @@ export type TPetContext = {
   selectedPetId: string | null;
   selectedPet: Pet | undefined;
   handleAddPet: (newPet: PetEssentials) => Promise<void>;
-  handleEditPet: (id: string, updatedPet: PetEssentials) => Promise<void>;
-  handleCheckoutPet: (id: string) => Promise<void>;
-  handleChangeSelectedPetId: (id: string) => void;
+  handleEditPet: (id: Pet["id"], updatedPet: PetEssentials) => Promise<void>;
+  handleCheckoutPet: (id: Pet["id"]) => Promise<void>;
+  handleChangeSelectedPetId: (id: Pet["id"]) => void;
   numberOfPets: number;
 };
 

@@ -3,6 +3,7 @@
 import prisma from "@/lib/db";
 import { PetEssentials } from "@/lib/types";
 import { sleep } from "@/lib/utils";
+import { Pet } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function addPet(data: PetEssentials) {
@@ -18,7 +19,7 @@ export async function addPet(data: PetEssentials) {
   revalidatePath("/app", "layout");
 }
 
-export async function editPet(id: string, data: PetEssentials) {
+export async function editPet(id: Pet["id"], data: PetEssentials) {
   await sleep();
 
   try {
@@ -35,7 +36,7 @@ export async function editPet(id: string, data: PetEssentials) {
   revalidatePath("/app", "layout");
 }
 
-export async function checkoutPet(id: string) {
+export async function checkoutPet(id: Pet["id"]) {
   await sleep();
 
   try {
