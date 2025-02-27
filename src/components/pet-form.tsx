@@ -15,14 +15,6 @@ type PetFormProps = {
   onFormSubmission: () => void;
 };
 
-type TPerForm = {
-  name: string;
-  ownerName: string;
-  imageUrl: string;
-  age: number;
-  notes: string;
-};
-
 const petFormSchema = z.object({
   name: z
     .string()
@@ -48,6 +40,8 @@ const petFormSchema = z.object({
   ]),
 });
 
+type TPetForm = z.infer<typeof petFormSchema>;
+
 export default function PetForm({
   actionType,
   onFormSubmission,
@@ -58,7 +52,7 @@ export default function PetForm({
     register,
     formState: { errors },
     trigger,
-  } = useForm<TPerForm>({
+  } = useForm<TPetForm>({
     resolver: zodResolver(petFormSchema),
   });
 
@@ -134,6 +128,7 @@ export default function PetForm({
             id="age"
             {...register("age")}
             defaultValue={actionType === "edit" ? selectedPet?.age : ""}
+            type="number"
             placeholder="Age"
           />
           {errors.age && <p className="text-red-500">{errors.age.message}</p>}

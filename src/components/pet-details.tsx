@@ -1,6 +1,7 @@
 "use client";
 
 import { usePetContext } from "@/lib/hooks";
+import { cn } from "@/lib/utils";
 import { Pet } from "@prisma/client";
 import Image from "next/image";
 import PetButton from "./pet-button";
@@ -33,7 +34,7 @@ function TopBar({ pet }: PetProps) {
   const { handleCheckoutPet } = usePetContext();
 
   return (
-    <div className="flex items-center bg-white px-8 py-5 border-b border-light">
+    <div className="flex items-center bg-white px-3 py-5 border-b border-light">
       <Image
         src={pet.imageUrl}
         alt="Selected pet image"
@@ -43,14 +44,16 @@ function TopBar({ pet }: PetProps) {
       />
 
       <h2
-        className={`font-semibold leading-7 ml-5 ${
-          pet.name.length > 6 ? "text-xl sm:text-3xl" : "text-3xl"
-        }`}
+        className={cn(
+          `font-semibold leading-7 ml-2 ${
+            pet.name.length > 6 ? "text-xl sm:text-3xl" : "text-3xl"
+          }`
+        )}
       >
         {pet.name}
       </h2>
 
-      <div className="ml-auto space-x-2">
+      <div className="ml-auto space-x-1">
         <PetButton actionType="edit" />
         <PetButton
           actionType="checkout"
