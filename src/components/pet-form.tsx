@@ -20,7 +20,7 @@ const petFormSchema = z.object({
     .string()
     .trim()
     .min(1, { message: "Name is required" })
-    .max(7, { message: "Name should be less than 7 characters" }),
+    .max(10, { message: "Name should be less than 10 characters" }),
   ownerName: z
     .string()
     .trim()
@@ -84,7 +84,7 @@ export default function PetForm({
           <Input
             id="name"
             {...register("name")}
-            maxLength={7}
+            maxLength={10}
             defaultValue={actionType === "edit" ? selectedPet?.name : ""}
             placeholder="Name"
           />
