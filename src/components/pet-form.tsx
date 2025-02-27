@@ -69,6 +69,7 @@ export default function PetForm({
             id="imageUrl"
             type="text"
             name="imageUrl"
+            maxLength={200}
             defaultValue={actionType === "edit" ? selectedPet?.imageUrl : ""}
             placeholder="Unsplash image URL"
           />
@@ -93,6 +94,7 @@ export default function PetForm({
             id="notes"
             rows={3}
             name="notes"
+            maxLength={150}
             defaultValue={actionType === "edit" ? selectedPet?.notes : ""}
             placeholder="Notes"
           />
