@@ -11,7 +11,10 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const data = await prisma.pet.findMany();
+  const user = await prisma.user.findUnique({
+    where: { email: "example@gmail.com" },
+    include: { pets: true },
+  });
 
   return (
     <>
@@ -21,7 +24,9 @@ export default async function Layout({
         <AppHeader />
 
         <SearchContextProvider>
-          <PetContextProvider data={data}>{children}</PetContextProvider>
+          <PetContextProvider data={user?.pets || []}>
+            {children}
+          </PetContextProvider>
         </SearchContextProvider>
 
         <AppFooter />
