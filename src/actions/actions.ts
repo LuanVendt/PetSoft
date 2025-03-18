@@ -1,5 +1,6 @@
 "use server";
 
+import { checkAuth } from "@/components/server-utils";
 import { auth, signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { sleep } from "@/lib/utils";
@@ -44,9 +45,7 @@ export async function logOut() {
 export async function addPet(data: unknown) {
   const validatedData = petFormSchema.safeParse(data);
 
-  const session = await auth();
-
-  if (!session || !session?.user) redirect("/login");
+  const session = await checkAuth();
 
   if (!validatedData.success) {
     return {
@@ -58,7 +57,7 @@ export async function addPet(data: unknown) {
   await sleep();
   try {
     await prisma.pet.create({
-      data: { ...validatedData.data, userId: session.user?.id },
+      data: { ...validatedData.data, userId: session.user.id },
     });
   } catch (error) {
     return {
@@ -75,9 +74,7 @@ export async function editPet(id: unknown, data: unknown) {
   const validateId = petIdSchema.safeParse(id);
   const validatedData = petFormSchema.safeParse(data);
 
-  const session = await auth();
-
-  if (!session || !session?.user) redirect("/login");
+  const session = await checkAuth();
 
   if (!validatedData.success || !validateId.success)
     return {
@@ -108,9 +105,7 @@ export async function checkoutPet(id: unknown) {
     };
   }
 
-  const session = await auth();
-
-  if (!session || !session?.user) redirect("/login");
+  const session = await checkAuth();
 
   try {
     await prisma.pet.delete({
