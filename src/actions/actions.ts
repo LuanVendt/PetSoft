@@ -1,6 +1,6 @@
 "use server";
 
-import { checkAuth } from "@/components/server-utils";
+import { checkAuth, getPetByPetId } from "@/lib/server-utils";
 import { auth, signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { sleep } from "@/lib/utils";
@@ -81,9 +81,17 @@ export async function editPet(id: unknown, data: unknown) {
       message: "Invalid data.",
     };
 
+  const pet = await getPetByPetId(validateId.data);
+
+  if (!pet) {
+    return {
+      message: "Pet not found",
+    };
+  }
+
   try {
     await prisma.pet.update({
-      where: { id: validateId.data, userId: session.user.id },
+      where: { id: pet.id, userId: session.user.id },
       data: validatedData.data,
     });
   } catch (error) {
@@ -105,11 +113,19 @@ export async function checkoutPet(id: unknown) {
     };
   }
 
+  const pet = await getPetByPetId(validateId.data);
+
+  if (!pet) {
+    return {
+      message: "Pet not found",
+    };
+  }
+
   const session = await checkAuth();
 
   try {
     await prisma.pet.delete({
-      where: { id: validateId.data, userId: session.user.id },
+      where: { id: pet.id, userId: session.user.id },
     });
   } catch (error) {
     return {
