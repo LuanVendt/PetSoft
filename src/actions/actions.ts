@@ -75,6 +75,10 @@ export async function editPet(id: unknown, data: unknown) {
   const validateId = petIdSchema.safeParse(id);
   const validatedData = petFormSchema.safeParse(data);
 
+  const session = await auth();
+
+  if (!session || !session?.user) redirect("/login");
+
   if (!validatedData.success || !validateId.success)
     return {
       message: "Invalid data.",
@@ -82,7 +86,7 @@ export async function editPet(id: unknown, data: unknown) {
 
   try {
     await prisma.pet.update({
-      where: { id: validateId.data },
+      where: { id: validateId.data, userId: session.user.id },
       data: validatedData.data,
     });
   } catch (error) {
@@ -96,6 +100,7 @@ export async function editPet(id: unknown, data: unknown) {
 
 export async function checkoutPet(id: unknown) {
   const validateId = petIdSchema.safeParse(id);
+
   if (!validateId.success) {
     return {
       message: "Invalid ID.",
@@ -103,8 +108,14 @@ export async function checkoutPet(id: unknown) {
     };
   }
 
+  const session = await auth();
+
+  if (!session || !session?.user) redirect("/login");
+
   try {
-    await prisma.pet.delete({ where: { id: validateId.data } });
+    await prisma.pet.delete({
+      where: { id: validateId.data, userId: session.user.id },
+    });
   } catch (error) {
     return {
       message: "Could not checkout pet.",

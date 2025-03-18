@@ -33,7 +33,7 @@ export default async function Layout({
         <AppHeader />
 
         <SearchContextProvider>
-          <PetContextProvider data={pets || []}>{children}</PetContextProvider>
+          <PetContextProvider data={pets}>{children}</PetContextProvider>
         </SearchContextProvider>
 
         <AppFooter />

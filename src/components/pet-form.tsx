@@ -1,6 +1,5 @@
 "use client";
 
-import { DEFAULT_PET_IMAGE } from "@/lib/constants";
 import { usePetContext } from "@/lib/hooks";
 import { petFormSchema, TPetForm } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";

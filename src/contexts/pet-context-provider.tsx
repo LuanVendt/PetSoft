@@ -1,7 +1,6 @@
 "use client";
 
 import { addPet, checkoutPet, editPet } from "@/actions/actions";
-import { auth } from "@/lib/auth";
 import { DEFAULT_PET_IMAGE } from "@/lib/constants";
 import {
   PetContextProviderProps,
@@ -10,7 +9,6 @@ import {
 } from "@/lib/types";
 import { isValidImageUrl } from "@/lib/utils";
 import { Pet } from "@prisma/client";
-import { redirect } from "next/navigation";
 import { createContext, useOptimistic, useState } from "react";
 import { toast } from "sonner";
 
