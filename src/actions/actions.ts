@@ -46,7 +46,7 @@ export async function addPet(data: unknown) {
 
   const session = await auth();
 
-  if (!session) redirect("/login");
+  if (!session || !session?.user) redirect("/login");
 
   if (!validatedData.success) {
     return {
@@ -57,20 +57,8 @@ export async function addPet(data: unknown) {
 
   await sleep();
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: session?.user?.email as string,
-      },
-    });
-
-    if (!user) {
-      return {
-        message: "User not found.",
-      };
-    }
-
     await prisma.pet.create({
-      data: { ...validatedData.data, userId: user.id },
+      data: { ...validatedData.data, userId: session.user?.id },
     });
   } catch (error) {
     return {
