@@ -7,11 +7,14 @@ export default function Login() {
     <main>
       <H1 className="text-center mb-5">Log In</H1>
 
-      <AuthForm />
+      <AuthForm type="logIn" />
 
       <p className="mt-6 text-sm text-zinc-500">
         No account yet?{" "}
-        <Link href="/signup" className="font-medium">
+        <Link
+          href="/signup"
+          className="font-medium hover:underline text-zinc-700"
+        >
           Sign up
         </Link>
       </p>

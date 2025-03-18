@@ -27,6 +27,16 @@ export default function PetForm({
     trigger,
   } = useForm<TPetForm>({
     resolver: zodResolver(petFormSchema),
+    defaultValues:
+      actionType === "edit"
+        ? {
+            name: selectedPet?.name,
+            ownerName: selectedPet?.ownerName,
+            imageUrl: selectedPet?.imageUrl,
+            age: selectedPet?.age,
+            notes: selectedPet?.notes,
+          }
+        : undefined,
   });
 
   return (
@@ -58,7 +68,6 @@ export default function PetForm({
             id="name"
             {...register("name")}
             maxLength={10}
-            defaultValue={actionType === "edit" ? selectedPet?.name : ""}
             placeholder="Name"
           />
           {errors.name && <p className="text-red-500">{errors.name.message}</p>}
@@ -69,7 +78,6 @@ export default function PetForm({
           <Input
             id="ownerName"
             {...register("ownerName")}
-            defaultValue={actionType === "edit" ? selectedPet?.ownerName : ""}
             placeholder="Owner Name"
           />
           {errors.ownerName && (
@@ -82,12 +90,6 @@ export default function PetForm({
           <Input
             id="imageUrl"
             {...register("imageUrl")}
-            defaultValue={
-              actionType === "edit" &&
-              selectedPet?.imageUrl !== DEFAULT_PET_IMAGE
-                ? selectedPet?.imageUrl
-                : ""
-            }
             placeholder="Unsplash image URL"
           />
           {errors.imageUrl && (
@@ -100,7 +102,6 @@ export default function PetForm({
           <Input
             id="age"
             {...register("age")}
-            defaultValue={actionType === "edit" ? selectedPet?.age : ""}
             type="number"
             placeholder="Age"
           />
@@ -113,7 +114,6 @@ export default function PetForm({
             id="notes"
             {...register("notes")}
             maxLength={100}
-            defaultValue={actionType === "edit" ? selectedPet?.notes : ""}
             placeholder="Notes"
           />
           {errors.notes && (
